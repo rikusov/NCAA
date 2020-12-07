@@ -210,47 +210,16 @@ def generator_kw_dict(kw_s):#Гениратор для класа поддерж
     for item in kw_s.keys():
         if type(item) is not str: raise Exception('ERROR_DATA(GKD):kw is not STR')
         if type(kw_s[item]) is not list: raise Exception('ERROR_DATA(GKD):kw_s is two el. not list')
-        if len(kw_s[item]) != 2: raise Exception('ERROR_DATA(GKD):kw_s el is not two')
+        if len(kw_s[item]) < 2: raise Exception('ERROR_DATA(GKD):kw_s el is < 2')
         if type(kw_s[item][0]) is not int or kw_s[item][0] < 0: raise Exception('ERROR_DATA(GKD):kw_s one el. is not INT or < 0')
         if type(kw_s[item][1]) is not list: raise Exception('ERROR_DATA(GKD):kw_s is two el. is not list')
     tmp_kw = kw_status()
     for item in kw_s.keys():
-        tmp_kw.add(item,plist(kw_s[item][0],kw_s[item][1]))
+        tmp_kw.add(item,plist(*kw_s[item]))
     return tmp_kw
-#Шаблон для гениратора
-nkw = {
+
+nkw = {#Шаблон для гениратора
     'year':[0,[2010,2020]],
     'month':[1,[1,12]],
     'day':[2,[1,31]]
 }
-
-
-
-
-
-def main():
-    s = 'https://www.sports-reference.com/cbb/boxscores/index.cgi?month={month}&day={day}&year={year}'
-    # a = kw_status()
-    # a.add('month',plist(2,[1,12]))
-    # a.add('year',plist(1,[2010,2020]))
-    # a.add('day',plist(3,[1,31]))
-    a = generator_kw_dict(nkw)
-    a['month'] = 11
-    a['day'] = 8
-    a['year'] = 2020
-    
-    h = conf_html(s,a)
-
-    while h.is_next():
-        # with open('output.txt','w',encoding='UTF-8') as k:
-        #     k.write(str(h))
-        print(h.is_status())
-        print(h.get_kw())
-        h.next()
-
-    
-    
-
-
-if __name__ == '__main__':
-    main()
