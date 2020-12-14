@@ -181,10 +181,10 @@ class conf_html(object):#класс для получения html получа�
             return 'ERROR_get'
         self._htmls = self.html.status_code
         if self._htmls != 200: return 'ERROR_status'
-        return str(self.html.text)
+        return self.html.text
     
     def __str__(self):
-        return self.__repr__()
+        return str(self.__repr__())
 
     def next(self):#получение следующей комбинации ключевых слов
         self._next = self._kw.next()
@@ -204,6 +204,18 @@ class conf_html(object):#класс для получения html получа�
         self._htmls = True
 
     def get_kw(self): return self._kw.get_kw()
+
+    def get_html_text(self):
+        if not self._next: #смысл проверки что не удалось получить следующую комбинацию ключевых слов и страницу можно не запрашивать
+            self._htmls = 0
+            return 'ERROR_next'
+        try:
+            self.html = get(url = self._s.format(**self._kw.get_kw()))
+        except:
+            return 'ERROR_get'
+        self._htmls = self.html.status_code
+        if self._htmls != 200: return 'ERROR_status'
+        return self.html.text
     
 def generator_kw_dict(kw_s):#Гениратор для класа поддержки ключевых слов
     if type(kw_s) is not dict: raise Exception('ERROR_TYPE(GKD):kw_s is not DICT')
@@ -223,3 +235,5 @@ nkw = {#Шаблон для гениратора
     'month':[1,[1,12]],
     'day':[2,[1,31]]
 }
+
+#гениратор шаблона плох
